@@ -10,13 +10,15 @@ if (localStorage.getItem(RESPOND) !== null) {
     
     form.elements.email.value = feedbackData.email;
     form.elements.message.value = feedbackData.message;
+    feedbackObj.email = feedbackData.email;
+    feedbackObj.message = feedbackData.message;
 }
 
 form.addEventListener('input', throttle(onInputUpdateLocalStorage,500));
 form.addEventListener("submit", onFormSubmit);
 
 function onInputUpdateLocalStorage(evt) {
-    const { email, message } = evt.currentTarget.elements;
+    const { email, message } = evt.target.closest(".feedback-form").elements;
     feedbackObj.email = email.value;
     feedbackObj.message = message.value;
 
@@ -25,10 +27,16 @@ function onInputUpdateLocalStorage(evt) {
 
 function onFormSubmit(evt) {
     evt.preventDefault();
-    console.log(feedbackObj);
+    
+    const { email, message } = evt.currentTarget.elements;
 
-    localStorage.removeItem(RESPOND);
-    evt.currentTarget.reset();
+    if (email.value !== "" && message.value !== "") { 
+        console.log(feedbackObj);
+    
+        localStorage.removeItem(RESPOND);
+        evt.currentTarget.reset();
+    } else {
+        alert("Please fill in all fields");
+    }  
 }
-
 
